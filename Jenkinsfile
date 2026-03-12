@@ -21,12 +21,12 @@ pipeline {
         }
         stage('Deploy') {
             // environment {
-            //     ENVIRONMENT = "staging"
+            //     ENVIRONMENT = "staging" 
             // }
 
             when {
                 // expression {
-                //     env.ENVIRONMENT == "staging"
+                //     env.ENVIRONMENT == "staging"  Use expression for complex conditions
                 // }
                 environment(name: 'ENVIRONMENT', value: 'staging')
             }
