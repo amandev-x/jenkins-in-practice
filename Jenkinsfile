@@ -20,6 +20,7 @@ pipeline {
                     steps {
                         echo "Running unit tests"
                         sleep 2
+                        sh 'exit 1'
                         echo "Unit tests completed"
                     }
                 }
@@ -28,6 +29,13 @@ pipeline {
                         echo "Running integration tests"
                         sleep 3
                         echo "Integration tests completed"
+                    }
+                }
+                stage('Linting') {
+                    steps {
+                        echo "Running linting"
+                        sleep 5
+                        echo "Linting completed"
                     }
                 }
                 stage('Security Scan') {
