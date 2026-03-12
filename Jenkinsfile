@@ -15,8 +15,28 @@ pipeline {
             }
         }
         stage('Test') {
-            steps {
-                echo "Testing the application version with ${APP_VERSION}"
+            parallel {
+                stage('Unit Tests') {
+                    steps {
+                        echo "Running unit tests"
+                        sleep 2
+                        echo "Unit tests completed"
+                    }
+                }
+                stage('Integration Tests') {
+                    steps {
+                        echo "Running integration tests"
+                        sleep 3
+                        echo "Integration tests completed"
+                    }
+                }
+                stage('Security Scan') {
+                    steps {
+                        echo "Running security scan"
+                        sleep 4
+                        echo "Security scan completed"
+                    }
+                }
             }
         }
         stage('Deploy') {
