@@ -22,6 +22,10 @@ pipeline {
             environment {
                 ENVIRONMENT = "staging"
             }
+
+            when {
+                branch 'main'
+            }
             steps {
                 echo "Deploying the application in ${ENVIRONMENT} environment"
             }
