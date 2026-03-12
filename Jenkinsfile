@@ -5,6 +5,7 @@ pipeline {
         NAME = 'Jenkins'
         TOOL = 'CI/CD'
         APP_VERSION = '1.0'
+        ENVIRONMENT = 'staging'
     }
 
     stages {
@@ -19,9 +20,9 @@ pipeline {
             }
         }
         stage('Deploy') {
-            environment {
-                ENVIRONMENT = "staging"
-            }
+            // environment {
+            //     ENVIRONMENT = "staging"
+            // }
 
             when {
                 expression {
