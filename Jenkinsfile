@@ -24,7 +24,7 @@ pipeline {
             }
 
             when {
-                environment name: 'ENVIRONMENT', value: 'staging'
+                environment(name: 'ENVIRONMENT', value: 'staging')
             }
             steps {
                 echo "Deploying the application in ${ENVIRONMENT} environment"
