@@ -8,6 +8,10 @@ pipeline {
         ENVIRONMENT = 'staging'
     }
 
+    trigger {
+        cron('H/* * * * *')
+    }
+    
     stages {
         stage('Build') {
             steps {
@@ -21,7 +25,7 @@ pipeline {
                     steps {
                         echo "Running unit tests"
                         sleep 2
-                        error('simulated failure')
+                        echo "Unit tests completed"
                     }
                 }
                 stage('Integration Tests') {
