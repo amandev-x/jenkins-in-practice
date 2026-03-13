@@ -11,7 +11,7 @@ pipeline {
     trigger {
         cron('H/* * * * *')
     }
-    
+
     stages {
         stage('Build') {
             steps {
@@ -19,7 +19,6 @@ pipeline {
             }
         }
         stage('Test') {
-            failFast true
             parallel {
                 stage('Unit Tests') {
                     steps {
