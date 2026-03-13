@@ -10,7 +10,10 @@ pipeline {
 
     triggers {
         cron('H/5 * * * *')
+        pollSCM('H/5 * * * *')
     }
+
+
 
     stages {
         stage('Build') {
@@ -64,6 +67,11 @@ pipeline {
             }
             steps {
                 echo "Deploying the application in ${ENVIRONMENT} environment"
+            }
+        }
+        stage('Notify') {
+            steps {
+                echo "This build get triggered by ${currentBuild.getBuildCauses()}"
             }
         }
     }
