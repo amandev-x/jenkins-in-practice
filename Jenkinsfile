@@ -21,8 +21,7 @@ pipeline {
                     steps {
                         echo "Running unit tests"
                         sleep 2
-                        sh 'exit 1'
-                        echo "Unit tests completed"
+                        error('simulated failure')
                     }
                 }
                 stage('Integration Tests') {
