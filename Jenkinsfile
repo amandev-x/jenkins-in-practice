@@ -60,15 +60,15 @@ pipeline {
             // environment {
             //     ENVIRONMENT = "staging" 
             // }
-            when {
-                // expression {
-                //     env.ENVIRONMENT == "staging"  Use expression for complex conditions
-                // }
-                params.ENVIRONMENT == "production"
-            }
+            // when {
+            //     // expression {
+            //     //     env.ENVIRONMENT == "staging"  Use expression for complex conditions
+            //     // }
+            //     params.ENVIRONMENT == "production"
+            // }
 
             input (message: 'Approve deployment?', ok: 'Deploy')
-            
+
             steps {
                 echo "Deploying the application in ${ENVIRONMENT} environment"
             }
