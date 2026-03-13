@@ -2,10 +2,8 @@ pipeline {
     agent any 
 
     environment {
-        NAME = 'Jenkins'
-        TOOL = 'CI/CD'
+        BUILD_TOOL = 'CI/CD'
         APP_VERSION = '1.0'
-        ENVIRONMENT = 'staging'
     }
 
     triggers {
@@ -13,12 +11,16 @@ pipeline {
         pollSCM('H/5 * * * *')
     }
 
+    parameters {
+        string(name: 'APP_NAME', defaultValue: 'Jenkins', description: 'Name of the application')
+        string(name: 'ENVIRONMENT', defaultValue: 'staging', description: 'Environment to deploy')
 
+    }
 
     stages {
         stage('Build') {
             steps {
-                echo "Building the application with ${TOOL} ${NAME} with app version ${APP_VERSION}"
+                echo "Building the application with ${BUILD_TOOL} ${APP_NAME} with app version ${APP_VERSION}"
             }
         }
         stage('Test') {
@@ -58,12 +60,12 @@ pipeline {
             // environment {
             //     ENVIRONMENT = "staging" 
             // }
-
+            input (message: 'Approve deployment?', ok: 'Deploy')
             when {
                 // expression {
                 //     env.ENVIRONMENT == "staging"  Use expression for complex conditions
                 // }
-                environment(name: 'ENVIRONMENT', value: 'staging')
+                params.ENVIRONMENT == "production"
             }
             steps {
                 echo "Deploying the application in ${ENVIRONMENT} environment"
