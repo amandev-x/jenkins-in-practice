@@ -8,7 +8,7 @@ pipeline {
         ENVIRONMENT = 'staging'
     }
 
-    trigger {
+    triggers {
         cron('H/* * * * *')
     }
 
@@ -19,6 +19,7 @@ pipeline {
             }
         }
         stage('Test') {
+            failFast true
             parallel {
                 stage('Unit Tests') {
                     steps {
