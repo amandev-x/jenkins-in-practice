@@ -28,7 +28,7 @@ pipeline {
             when {
                     expression { params.RUN_TESTS }
                 }
-                
+
             parallel {
 
                 stage('Unit Tests') {
@@ -72,6 +72,10 @@ pipeline {
             //     params.ENVIRONMENT == "production"
             // }
 
+            when {
+                expression { params.ENVIRONMENT == "prod"}
+            }
+            
             steps {
                 input message: 'Deploy to production?', ok: 'yes'
                 echo "Deploying the application in ${params.ENVIRONMENT} environment"
