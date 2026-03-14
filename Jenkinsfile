@@ -3,8 +3,7 @@ pipeline {
 
     environment {
         BUILD_TOOL = 'CI/CD'
-        APP_VERSION = '1.0'
-        ENVIRONMENT = 'staging'
+        APP_NAME = 'jenkins'
     }
 
     parameters {
