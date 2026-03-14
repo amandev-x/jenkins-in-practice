@@ -24,12 +24,13 @@ pipeline {
         }
         stage('Test') {
             failFast true
-            parallel {
 
-                when {
+            when {
                     expression { params.RUN_TESTS }
                 }
                 
+            parallel {
+
                 stage('Unit Tests') {
                     steps {
                         echo "Running unit tests"
