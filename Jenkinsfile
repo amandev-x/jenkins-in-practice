@@ -4,18 +4,17 @@ pipeline {
     environment {
         BUILD_TOOL = 'CI/CD'
         APP_VERSION = '1.0'
-    }
-
-    triggers {
-        cron('H/5 * * * *')
-        pollSCM('H/5 * * * *')
+        ENVIRONMENT = 'staging'
     }
 
     parameters {
-        string(name: 'APP_NAME', defaultValue: 'Jenkins', description: 'Name of the application')
-        string(name: 'ENVIRONMENT', defaultValue: 'staging', description: 'Environment to deploy')
-
+        string(name: 'APP_VERSION', defaultValue: '1.0', description: 'Application version')
+        choice(name: 'ENVRIONMENT', choices: ['dev', 'staging', 'prod'], description: 'Envrionment')
     }
+    // triggers {
+    //     cron('H/5 * * * *')
+    //     pollSCM('H/5 * * * *')
+    // }
 
     stages {
         stage('Build') {
@@ -66,8 +65,6 @@ pipeline {
             //     // }
             //     params.ENVIRONMENT == "production"
             // }
-
-            input (message: 'Approve deployment?', ok: 'Deploy')
 
             steps {
                 echo "Deploying the application in ${ENVIRONMENT} environment"
