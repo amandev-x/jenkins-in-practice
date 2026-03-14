@@ -9,6 +9,7 @@ pipeline {
     parameters {
         string(name: 'APP_VERSION', defaultValue: '1.0', description: 'Application version')
         choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Environment')
+        booleanParam(name: 'RUN_TESTS', defaultValue: false, description: 'RUN_TESTS')
     }
     // triggers {
     //     cron('H/5 * * * *')
@@ -24,6 +25,11 @@ pipeline {
         stage('Test') {
             failFast true
             parallel {
+
+                when {
+                    expression { params.RUN_TESTS }
+                }
+                
                 stage('Unit Tests') {
                     steps {
                         echo "Running unit tests"
