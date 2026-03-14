@@ -68,7 +68,10 @@ pipeline {
             }
 
             steps {
-                input message: 'Deploy to production?', ok: 'yes'
+                timeout(time: 1, unit: 'MINUTES') {
+                    input message: 'Deploy to production?', ok: 'yes'
+                }
+                
                 echo "Deploying the application in ${params.ENVIRONMENT} environment"
             }
         }
