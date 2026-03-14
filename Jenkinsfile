@@ -8,7 +8,7 @@ pipeline {
 
     parameters {
         string(name: 'APP_VERSION', defaultValue: '1.0', description: 'Application version')
-        choice(name: 'ENVRIONMENT', choices: ['dev', 'staging', 'prod'], description: 'Envrionment')
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Envrionment')
     }
     // triggers {
     //     cron('H/5 * * * *')
