@@ -66,6 +66,7 @@ pipeline {
             // }
 
             steps {
+                input message: 'Deploy to production?', ok: 'yes'
                 echo "Deploying the application in ${params.ENVIRONMENT} environment"
             }
         }
