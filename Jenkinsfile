@@ -8,7 +8,7 @@ pipeline {
 
     parameters {
         string(name: 'APP_VERSION', defaultValue: '1.0', description: 'Application version')
-        choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Envrionment')
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Environment')
     }
     // triggers {
     //     cron('H/5 * * * *')
@@ -18,7 +18,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo "Building the application with ${BUILD_TOOL} ${APP_NAME} with app version ${APP_VERSION}"
+                echo "Building the application with ${BUILD_TOOL} ${APP_NAME} with app version ${params.APP_VERSION}"
             }
         }
         stage('Test') {
@@ -66,7 +66,7 @@ pipeline {
             // }
 
             steps {
-                echo "Deploying the application in ${ENVIRONMENT} environment"
+                echo "Deploying the application in ${params.ENVIRONMENT} environment"
             }
         }
         stage('Notify') {
