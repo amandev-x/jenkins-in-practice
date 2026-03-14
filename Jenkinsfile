@@ -62,20 +62,11 @@ pipeline {
             }
         }
         stage('Deploy') {
-            // environment {
-            //     ENVIRONMENT = "staging" 
-            // }
-            // when {
-            //     // expression {
-            //     //     env.ENVIRONMENT == "staging"  Use expression for complex conditions
-            //     // }
-            //     params.ENVIRONMENT == "production"
-            // }
 
             when {
                 expression { params.ENVIRONMENT == "prod"}
             }
-            
+
             steps {
                 input message: 'Deploy to production?', ok: 'yes'
                 echo "Deploying the application in ${params.ENVIRONMENT} environment"
@@ -84,6 +75,8 @@ pipeline {
         stage('Notify') {
             steps {
                 echo "This build get triggered by ${currentBuild.getBuildCauses()}"
+                echo "Choosen environment is ${params.ENVIRONMENT}"
+                echo "App version is ${params.APP_VERSION}"
             }
         }
     }
