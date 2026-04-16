@@ -21,7 +21,12 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                buildApp('MyApp', '1.0')
+                buildApp(
+                    appName: env.APP_NAME.toUpperCase(),
+                    buildTool: env.BUILD_TOOL,
+                    appversion: params.APP_VERSION,
+                    environment: params.ENVIRONMENT
+                )
             }
         }
         stage('Test') {
