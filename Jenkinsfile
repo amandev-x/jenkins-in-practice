@@ -95,11 +95,13 @@ pipeline {
         }
 
         failure {
-            echo "Pipeline failed"
+            // echo "Pipeline failed"
+            notifyBuild("FAILURE")
         }
 
         success {
-            echo "Pipeline succeeded"
+            // echo "Pipeline succeeded"
+            notifyBuild("SUCCESS")
         }
     }
 }
