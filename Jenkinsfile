@@ -27,9 +27,12 @@ pipeline {
         stage('Test') {
             failFast true
 
+            // when {
+            //         expression { params.RUN_TESTS }
+            //     }
             when {
-                    expression { params.RUN_TESTS }
-                }
+                runTests(true)
+            }
 
             parallel {
 
