@@ -1,3 +1,4 @@
+@Library('my_shared_library')
 pipeline {
     agent any 
 
@@ -19,7 +20,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo "Building the application with ${BUILD_TOOL} ${APP_NAME} with app version ${params.APP_VERSION}"
+                buildApp()
             }
         }
         stage('Test') {
