@@ -31,7 +31,7 @@ pipeline {
             //         expression { params.RUN_TESTS }
             //     }
             when {
-                runTests(true)
+                runTests(params.RUN_TESTS)
             }
 
             parallel {
