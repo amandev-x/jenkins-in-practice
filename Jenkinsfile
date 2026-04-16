@@ -21,7 +21,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                buildApp()
+                buildApp('MyApp', '1.0')
             }
         }
         stage('Test') {
