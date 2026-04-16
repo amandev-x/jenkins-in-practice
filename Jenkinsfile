@@ -13,10 +13,6 @@ pipeline {
         choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Environment')
         booleanParam(name: 'RUN_TESTS', defaultValue: false, description: 'RUN_TESTS')
     }
-    // triggers {
-    //     cron('H/5 * * * *')
-    //     pollSCM('H/5 * * * *')
-    // }
 
     stages {
         stage('Build') {
@@ -24,52 +20,47 @@ pipeline {
                 buildApp(
                     appName: env.APP_NAME.toUpperCase(),
                     buildTool: env.BUILD_TOOL,
-                    appversion: params.APP_VERSION,
+                    appVersion: params.APP_VERSION,
                     environment: params.ENVIRONMENT
                 )
             }
         }
         stage('Test') {
-            failFast true
 
-            // when {
-            //         expression { params.RUN_TESTS }
-            //     }
-            steps {
-                runTests(params.RUN_TESTS)
+            when {
+                    expression { params.RUN_TESTS }
+                }
+            parallel {
+
+                stage('Unit Tests') {
+                    steps {
+                        echo "Running unit tests"
+                        sleep 2
+                        echo "Unit tests completed"
+                    }
+                }
+                stage('Integration Tests') {
+                    steps {
+                        echo "Running integration tests"
+                        sleep 3
+                        echo "Integration tests completed"
+                    }
+                }
+                stage('Linting') {
+                    steps {
+                        echo "Running linting"
+                        sleep 5
+                        echo "Linting completed"
+                    }
+                }
+                stage('Security Scan') {
+                    steps {
+                        echo "Running security scan"
+                        sleep 4
+                        echo "Security scan completed"
+                    }
+                }
             }
-
-            // parallel {
-
-            //     stage('Unit Tests') {
-            //         steps {
-            //             echo "Running unit tests"
-            //             sleep 2
-            //             echo "Unit tests completed"
-            //         }
-            //     }
-            //     stage('Integration Tests') {
-            //         steps {
-            //             echo "Running integration tests"
-            //             sleep 3
-            //             echo "Integration tests completed"
-            //         }
-            //     }
-            //     stage('Linting') {
-            //         steps {
-            //             echo "Running linting"
-            //             sleep 5
-            //             echo "Linting completed"
-            //         }
-            //     }
-            //     stage('Security Scan') {
-            //         steps {
-            //             echo "Running security scan"
-            //             sleep 4
-            //             echo "Security scan completed"
-            //         }
-            //     }
-            // }
         }
         stage('Deploy') {
 
@@ -87,9 +78,11 @@ pipeline {
         }
         stage('Notify') {
             steps {
+                runTests(params.RUN_TESTS)
                 echo "This build get triggered by ${currentBuild.getBuildCauses()}"
                 echo "Choosen environment is ${params.ENVIRONMENT}"
                 echo "App version is ${params.APP_VERSION}"
+                notifyBuild(currentBuild.result ?: 'SUCCESS')
             }
         }
     }
@@ -100,13 +93,11 @@ pipeline {
         }
 
         failure {
-            // echo "Pipeline failed"
-            notifyBuild("FAILURE")
+            echo "Pipeline failed"
         }
 
         success {
-            // echo "Pipeline succeeded"
-            notifyBuild("SUCCESS")
+            echo "Pipeline succeeded"
         }
     }
 }
