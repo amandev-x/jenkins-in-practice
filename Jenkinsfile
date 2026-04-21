@@ -7,12 +7,17 @@ pipeline {
         BUILD_TOOL = 'CI/CD'
         APP_NAME = 'jenkins'
         IMAGE_NAME = 'amandabral9954/jenkins-in-practice'
+        IMAGE_TAG = '1.0'
     }
 
     parameters {
         string(name: 'APP_VERSION', defaultValue: '1.0', description: 'Application version')
         choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Environment')
         booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'RUN_TESTS')
+    }
+
+    triggers {
+        githubPush()
     }
 
     stages {
@@ -24,19 +29,6 @@ pipeline {
                     appVersion: params.APP_VERSION,
                     environment: params.ENVIRONMENT
                 )
-            }
-        }
-        stage('Build Docker Image') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub_creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                sh 'echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin'
-                
-                dockerBuildPush(
-                    imageName: env.IMAGE_NAME,
-                    imageTag: params.APP_VERSION,
-                    credentialsId: 'dockerhub_creds'
-                    )
-            }
             }
         }
         stage('Test') {
@@ -76,7 +68,16 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
+        stage('Build Docker Image') {
+            steps {
+                dockerBuildPush(
+                    imageName: env.IMAGE_NAME,
+                    imageTag: params.APP_VERSION,
+                    credentialsId: 'dockerhub_creds'
+                    )
+            }
+            }
+        stage('Approve') {
 
             when {
                 expression { params.ENVIRONMENT == "prod"}
@@ -86,16 +87,26 @@ pipeline {
                 timeout(time: 1, unit: 'MINUTES') {
                     input message: 'Deploy to production?', ok: 'yes'
                 }
-                
-                echo "Deploying the application in ${params.ENVIRONMENT} environment"
             }
         }
+        stage('Deploy') {
+
+            when {
+                expression { env.GIT_BRANCH ==~ "/.*main/" }
+            }
+            
+            steps {
+                echo "Deploying the application to ${params.ENVIRONMENT} environment"
+                }
+            }
         stage('Notify') {
             steps {
                 runTests(params.RUN_TESTS)
                 echo "This build get triggered by ${currentBuild.getBuildCauses()}"
                 echo "Choosen environment is ${params.ENVIRONMENT}"
                 echo "App version is ${params.APP_VERSION}"
+                echo "Branch: ${env.GIT_BRANCH}"
+                echo "Commit: ${env.GIT_COMMIT}"
                 notifyBuild(currentBuild.result ?: 'SUCCESS')
             }
         }
@@ -104,8 +115,8 @@ pipeline {
     post {
         always {
             echo "Pipeline completed"
-            sh "docker rmi ${IMAGE_NAME}:${APP_VERSION} || true"
-            sh "docker rmi ${IMAGE_NAME}:latest || true"
+            sh "docker rmi ${env.IMAGE_NAME}:${params.APP_VERSION} || true"
+            sh "docker rmi ${env.IMAGE_NAME}:latest || true"
             sh 'docker logout'
         }
 
